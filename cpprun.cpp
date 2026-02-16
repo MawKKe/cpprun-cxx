@@ -115,14 +115,26 @@ static int run_cmd(const std::string & prog, const std::vector<std::string> & ar
     return status;
 }
 
-auto split_args(const std::vector<std::string> & args) {
-    auto it = std::find(args.begin(), args.end(), "--");
-    if (it == args.end()) {
-        return std::make_pair(args, std::vector<std::string>{});
+auto split_args(const std::vector<std::string> & args, const std::string & sep = "--") {
+    auto it = std::find(std::begin(args), std::end(args), sep);
+
+    if (it == std::end(args)) {
+        return std::pair{
+            args,
+            std::vector<std::string>{},
+        };
     }
-    auto idx = std::distance(args.begin(), it);
-    return std::make_pair(std::vector<std::string>(args.begin(), args.begin() + idx),
-                          std::vector<std::string>(it + 1, args.end()));
+
+    return std::pair{
+        std::vector<std::string>{
+            std::begin(args),
+            it,
+        },
+        std::vector<std::string>{
+            std::next(it),
+            std::end(args),
+        },
+    };
 }
 
 struct CpprunArgs {
