@@ -172,11 +172,10 @@ CpprunArgs parse_cpprun_args(const std::vector<std::string> & cpprun_args) {
         } else if (a == "-c") {
             args.build_only = true;
         } else if (a == "-o") {
-            if (i + 1 < cpprun_args.size()) {
-                args.output_path = fs::path(cpprun_args[++i]);
-            } else {
+            if (i + 1 >= cpprun_args.size()) {
                 throw std::runtime_error("-o requires an argument");
             }
+            args.output_path = fs::path(cpprun_args[++i]);
         } else if (a.substr(0, 5) == "-std=") {
             args.cxx_standard = a;
         } else {
