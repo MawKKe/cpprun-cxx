@@ -7,18 +7,20 @@ or:
     $ make out/cpprun
 
 then place the 'cpprun' binary somewhere in your PATH and use it like this:
-    $ cpprun [cpprun options] -- [program options]
+    $ cpprun [cpprun or build options] -- [program options]
 
 cpprun options:
-    --cpprun-no-defaults: do not use default compiler flags (like -Wall, -Wextra, etc.)
     --cpprun-compiler-info: show compiler version information and exit
     -c: build only, do not run the program
     -o <file>: specify output file (default is a temporary file in the system temp directory)
-    (any other options are passed to the compiler)
+    -std=<version>: specify the C++ standard to use (overrides CPPRUN_CXX_STANDARD environment variable)
+    (any other options are passed to the compiler as-is)
 
 environment variables:
+    CPPRUN_CXXFLAGS: additional flags to pass to the compiler (default is "-Wall -Wextra -pedantic -g")
+    CPPRUN_CXX_STANDARD: specify the C++ standard to use (default is "-std=c++23",set to empty string to disable)
+    CPPRUN_CXX: specify the C++ compiler to use (default is "c++")
     CPPRUN_VERBOSE: if set to a non-empty value, print the commands being executed
-    CXX: specify the C++ compiler to use (default is "c++")
 */
 
 #include <algorithm>
