@@ -245,9 +245,9 @@ auto make_build_cmd(const CpprunArgs &args, const fs::path &output_file)
 
 uint32_t random_value()
 {
-    static_assert(sizeof(uint32_t) == sizeof(std::mt19937::result_type), "rng result type is too small");
+    static_assert(sizeof(uint32_t) <= sizeof(std::mt19937::result_type), "rng result type is too small");
     std::mt19937 rng(std::random_device{}());
-    return rng();
+    return rng() & 0xFFFFFFFF;
 }
 
 auto format_name(uint32_t rv, pid_t pid, const std::string &suffix)
