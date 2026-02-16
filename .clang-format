@@ -2,3 +2,7 @@ BasedOnStyle: Google
 ColumnLimit: 120
 IndentWidth: 4
 PointerAlignment: Middle
+AllowShortFunctionsOnASingleLine: None
+AllowShortBlocksOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
