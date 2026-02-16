@@ -204,11 +204,6 @@ uint32_t random_value() {
     return rng() & 0xFFFFFFFF;
 }
 
-auto format_name(uint32_t rv, pid_t pid, const std::string & suffix) {
-    return "cpprun-" + std::to_string(rv) + "-" + std::to_string(pid) + suffix;
-    // return std::format("cpprun-{}-{}{}", random_value, pid, suffix);
-}
-
 int main(int argc, const char ** argv_raw) {
     std::vector<std::string> argv(argv_raw + 1, argv_raw + argc);
     auto [cpprun_args, run_args] = split_args(argv);
