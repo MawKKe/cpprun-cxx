@@ -6,6 +6,6 @@ clean:
 	rm -rf out
 
 test: out/cpprun hello.cpp
-	env CPPRUN_VERBOSE=1 ./out/cpprun hello.cpp -O3 -- foo bar baz
+	env CPPRUN_VERBOSE=1 ./out/cpprun hello.cpp -O3 -std=c++17 -- foo bar baz
 
 .PHONY: clean test
