@@ -78,12 +78,9 @@ static std::string join_shell(const std::vector<std::string> & args) {
     return out;
 }
 
-static int run_cmd(const std::vector<std::string> & cmd, bool verbose) {
-    if (cmd.empty()) {
-        return 0;
-    }
+static int run_cmd(const std::string & prog, const std::vector<std::string> & args, bool verbose) {
     if (verbose) {
-        std::cout << ">>> " << join_shell(cmd) << std::endl;
+        std::cout << ">>> " << prog << " " << join_shell(args) << std::endl;
     }
 
     pid_t pid = fork();
@@ -94,12 +91,13 @@ static int run_cmd(const std::vector<std::string> & cmd, bool verbose) {
     if (pid == 0) {
         // child
         std::vector<char *> argv;
-        argv.reserve(cmd.size() + 1);
-        for (auto & s : cmd) {
+        argv.reserve(args.size() + 1);
+        argv.push_back(const_cast<char *>(prog.c_str()));
+        for (auto & s : args) {
             argv.push_back(const_cast<char *>(s.c_str()));
         }
         argv.push_back(nullptr);
-        execvp(argv[0], argv.data());
+        execvp(prog.c_str(), argv.data());
         perror("execvp");
         _exit(127);
     }
@@ -186,9 +184,8 @@ CpprunArgs parse_cpprun_args(const std::vector<std::string> & cpprun_args) {
     return args;
 }
 
-auto make_build_cmd(const CpprunArgs & args, const fs::path & output_file) {
+auto collect_build_args(const CpprunArgs & args, const fs::path & output_file) {
     std::vector<std::string> cmd;
-    append(cmd, args.cxx);
     if (args.cxx_standard.has_value()) {
         append(cmd, args.cxx_standard.value());
     }
@@ -219,7 +216,7 @@ int main(int argc, const char ** argv_raw) {
     CpprunArgs args = parse_cpprun_args(cpprun_args);
 
     if (args.show_compiler_info) {
-        run_cmd({args.cxx, "--version"}, true);
+        run_cmd(args.cxx, {"--version"}, true);
         return 0;
     }
 
@@ -246,20 +243,16 @@ int main(int argc, const char ** argv_raw) {
         }
     };
 
-    auto cmd = make_build_cmd(args, output_path);
+    auto build_args = collect_build_args(args, output_path);
 
-    int rc = run_cmd(cmd, args.verbose);
+    int rc = run_cmd(args.cxx, build_args, args.verbose);
 
     if (rc != 0 || args.build_only) {
         cleanup();
         return rc;
     }
 
-    std::vector<std::string> post_build_cmd{output_path.string()};
-
-    extend(post_build_cmd, run_args);
-
-    rc = run_cmd(post_build_cmd, args.verbose);
+    rc = run_cmd(output_path.string(), run_args, args.verbose);
 
     cleanup();
 
