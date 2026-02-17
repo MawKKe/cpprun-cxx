@@ -15,3 +15,11 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU"
             -Wall -Wextra -pedantic
     )
 endif()
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
+    # Old GCC versions require manual linking with stdc++fs for std::filesystem support
+    target_link_libraries(cpprun
+        PRIVATE
+            stdc++fs
+    )
+endif()
