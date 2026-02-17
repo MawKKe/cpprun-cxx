@@ -43,4 +43,13 @@ if(ENABLE_TESTING)
     add_test(NAME cpprun_show_compiler_info
         COMMAND cpprun --cpprun-compiler-info
     )
+
+    add_test(NAME cpprun_expect_failure_to_compile
+        COMMAND cpprun -std=c++17 ${CMAKE_CURRENT_SOURCE_DIR}/notexist.cpp
+    )
+
+    set_tests_properties(cpprun_expect_failure_to_compile
+        PROPERTIES
+            WILL_FAIL TRUE
+    )
 endif()
