@@ -4,12 +4,14 @@ A simple utility to compile and run C++ programs with a single command
 # Usage
 
 Let's say you have a (standalone) C++ source file like:
+
 ```c++
+// hello.cpp
 #include <iostream>
 int main(int argc, const char **argv)
 {
     std::cout << "Hello World!" << std::endl;
-    for (int i = 0; i < argc; ++i)
+    for (int i = 1; i < argc; ++i)
     {
         std::cout << "argv[" << i << "]: " << argv[i] << std::endl;
     }
@@ -38,12 +40,12 @@ Hello World!
 Most command line arguments are passed as-is to the compiler.
 
 If you want to pass arguments to the final executable invocation, use the `--` convention:
+
 ```bash
 $ env CPPRUN_VERBOSE=1 cpprun hello.cpp -O3 -- foo bar baz
 >>> c++ -std=c++23 -Wall -Wextra -pedantic -g hello.cpp -O3 -o /var/folders/82/423hfkdjfhsh8h3hfdsf/T/cpprun-2754959787-28887/artifact.exe
 >>> /var/folders/82/423hfkdjfhsh8h3hfdsf/T/cpprun-2754959787-28887/artifact.exe foo bar baz
 Hello World!
-argv[0]: /var/folders/82/423hfkdjfhsh8h3hfdsf/T/cpprun-2754959787-28887/artifact.exe
 argv[1]: foo
 argv[2]: bar
 argv[3]: baz
