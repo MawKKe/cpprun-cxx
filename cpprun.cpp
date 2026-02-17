@@ -241,7 +241,7 @@ int main(int argc, const char ** argv_raw) {
 
     CpprunArgs args = parse_cpprun_args(cpprun_args);
 
-    if (args.show_compiler_info or contains(cpprun_args, "--version")) {
+    if (args.show_compiler_info or contains(cpprun_args, "--version") or contains(cpprun_args, "-v")) {
         run_cmd(args.cxx, {"--version"}, true);
         return 0;
     }
