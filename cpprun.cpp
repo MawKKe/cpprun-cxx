@@ -221,7 +221,7 @@ fs::path make_random_output_path(const CpprunArgs & args) {
     std::string suffix = args.build_only ? ".o" : ".exe";
     auto subdir = "cpprun-" + std::to_string(random_value()) + "-" + std::to_string(getpid());
     return tmpdir / subdir / ("artifact" + suffix);
-};
+}
 
 bool contains(const std::vector<std::string> & haystack, const std::string & needle) {
     return std::find(haystack.begin(), haystack.end(), needle) != haystack.end();
