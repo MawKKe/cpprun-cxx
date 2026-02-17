@@ -67,11 +67,26 @@ Here you see that `-O3` was passed to the compiler, while `foo bar baz` were pas
 
 # Build and install
 
-```
-$ make out/cpprun
+The recommended way is to use CMake:
+
+```bash
+# configure
+$ cmake -B out -S . -G Ninja  # etc
+
+# build
+$ cmake --build out
 ```
 
-The program should be runnable:
+alternatively, you can build it with manual compiler invocation:
+
+```bash
+$ mkdir out
+$ c++ -std=c++17 -Wall -Wextra -pedantic -o out/cpprun cpprun.cpp
+```
+
+(**NOTE**: The required compiler flags depend on the compiler and version used. Prefer using CMake since it knows how to figure out the details automatically.)
+
+The program should now be runnable:
 
 ```bash
 $ ./out/cpprun --cpprun-compiler-info
@@ -82,7 +97,13 @@ Thread model: posix
 InstalledDir: /Library/Developer/CommandLineTools/usr/bin
 ```
 
-The binary should be standalone, meaning you can place it somewhere in your `$PATH` for easy invocation.
+The binary should be standalone, meaning you can place it somewhere in your `$PATH` for easy invocation. Example:
+
+```bash
+$ cp out/cpprun ~/.local/bin/
+$ cpprun --cpprun-compiler-info
+```
+
 
 # License
 
