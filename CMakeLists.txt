@@ -28,7 +28,7 @@ endif()
 if(ENABLE_TESTING)
     include(CTest)
     add_test(NAME cpprun_test
-        COMMAND cpprun ${CMAKE_CURRENT_SOURCE_DIR}/hello.cpp -- foo bar baz
+        COMMAND cpprun -std=c++17 ${CMAKE_CURRENT_SOURCE_DIR}/hello.cpp -- foo bar baz
     )
     set_tests_properties(cpprun_test
         PROPERTIES
