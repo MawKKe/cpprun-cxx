@@ -8,4 +8,9 @@ clean:
 test: out/cpprun hello.cpp
 	env CPPRUN_VERBOSE=1 ./out/cpprun hello.cpp -O3 -std=c++17 -- foo bar baz
 
-.PHONY: clean test
+ctest:
+	cmake -B out -S . -GNinja -DENABLE_TESTING=ON -DCMAKE_BUILD_TYPE=Debug
+	cmake --build out --verbose
+	ctest --test-dir out
+
+.PHONY: clean test ctest
