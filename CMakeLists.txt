@@ -27,12 +27,20 @@ endif()
 
 if(ENABLE_TESTING)
     include(CTest)
-    add_test(NAME cpprun_test
+    add_test(NAME cpprun_run_hello_world_with_args
         COMMAND cpprun -std=c++17 ${CMAKE_CURRENT_SOURCE_DIR}/hello.cpp -- foo bar baz
     )
-    set_tests_properties(cpprun_test
+    set_tests_properties(cpprun_run_hello_world_with_args
         PROPERTIES
             PASS_REGULAR_EXPRESSION
                 "Hello World!\nargv\\[1\\]: foo\nargv\\[2\\]: bar\nargv\\[3\\]: baz\n"
+    )
+
+    add_test(NAME cpprun_show_version_native
+        COMMAND cpprun --version
+    )
+
+    add_test(NAME cpprun_show_compiler_info
+        COMMAND cpprun --cpprun-compiler-info
     )
 endif()

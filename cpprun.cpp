@@ -216,13 +216,17 @@ uint32_t random_value() {
     return rng() & 0xFFFFFFFF;
 }
 
+bool contains(const std::vector<std::string> & haystack, const std::string & needle) {
+    return std::find(haystack.begin(), haystack.end(), needle) != haystack.end();
+}
+
 int main(int argc, const char ** argv_raw) {
     std::vector<std::string> argv(argv_raw + 1, argv_raw + argc);
     auto [cpprun_args, run_args] = split_args(argv);
 
     CpprunArgs args = parse_cpprun_args(cpprun_args);
 
-    if (args.show_compiler_info) {
+    if (args.show_compiler_info or contains(cpprun_args, "--version")) {
         run_cmd(args.cxx, {"--version"}, true);
         return 0;
     }
