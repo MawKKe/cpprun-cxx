@@ -263,6 +263,13 @@ int main(int argc, const char ** argv_raw) {
         return rc;
     }
 
+    if (not fs::exists(output_path)) {
+        std::cerr << "ERROR: expected output file at " << output_path << " was not created, unable to continue!"
+                  << std::endl;
+        cleanup();
+        return 127;
+    }
+
     rc = run_cmd(output_path.string(), run_args, args.verbose);
 
     cleanup();
