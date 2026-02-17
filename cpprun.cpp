@@ -216,8 +216,23 @@ uint32_t random_value() {
     return rng() & 0xFFFFFFFF;
 }
 
+fs::path make_random_output_path(const CpprunArgs & args) {
+    auto tmpdir = fs::temp_directory_path();
+    std::string suffix = args.build_only ? ".o" : ".exe";
+    auto subdir = "cpprun-" + std::to_string(random_value()) + "-" + std::to_string(getpid());
+    return tmpdir / subdir / ("artifact" + suffix);
+};
+
 bool contains(const std::vector<std::string> & haystack, const std::string & needle) {
     return std::find(haystack.begin(), haystack.end(), needle) != haystack.end();
+}
+
+template <typename T, typename F>
+auto or_else(const std::optional<T> & opt, F && fallback) {
+    if (opt.has_value()) {
+        return opt.value();
+    }
+    return fallback();
 }
 
 int main(int argc, const char ** argv_raw) {
@@ -231,13 +246,9 @@ int main(int argc, const char ** argv_raw) {
         return 0;
     }
 
-    auto tmpdir = fs::temp_directory_path();
+    auto make_path = [&args]() -> fs::path { return make_random_output_path(args); };
 
-    std::string suffix = args.build_only ? ".o" : ".exe";
-
-    auto subdir = "cpprun-" + std::to_string(random_value()) + "-" + std::to_string(getpid());
-
-    fs::path output_path = fs::absolute(args.output_path.value_or(tmpdir / subdir / ("artifact" + suffix)));
+    fs::path output_path = fs::absolute(or_else(args.output_path, make_path));
 
     fs::create_directories(output_path.parent_path());
 
