@@ -23,3 +23,16 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_
             stdc++fs
     )
 endif()
+
+
+if(ENABLE_TESTING)
+    include(CTest)
+    add_test(NAME cpprun_test
+        COMMAND cpprun ${CMAKE_CURRENT_SOURCE_DIR}/hello.cpp -- foo bar baz
+    )
+    set_tests_properties(cpprun_test
+        PROPERTIES
+            PASS_REGULAR_EXPRESSION
+                "Hello World!\nargv\\[1\\]: foo\nargv\\[2\\]: bar\nargv\\[3\\]: baz\n"
+    )
+endif()

@@ -104,6 +104,22 @@ $ cp out/cpprun ~/.local/bin/
 $ cpprun --cpprun-compiler-info
 ```
 
+# Testing
+
+```bash
+$ cmake -B out -S . -G Ninja -DENABLE_TESTING=ON
+
+$ cmake --build out
+
+$ ctest --test-dir out
+Test project /Users/markus/dev/github.com/cpprun-cxx/out
+    Start 1: cpprun_test
+1/1 Test #1: cpprun_test ......................   Passed    0.66 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.66 sec
+```
 
 # License
 
