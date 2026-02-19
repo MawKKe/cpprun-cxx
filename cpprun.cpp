@@ -296,6 +296,8 @@ int inner_main(int argc, const char ** argv_raw) {
 }
 }  // namespace cpprun
 
+#if !defined(CPPRUN_TESTS)
 int main(int argc, const char ** argv_raw) {
     return cpprun::inner_main(argc, argv_raw);
 }
+#endif
