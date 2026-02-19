@@ -227,7 +227,7 @@ bool contains(const std::vector<std::string> & haystack, const std::string & nee
 }
 
 template <typename T, typename F>
-auto or_else(const std::optional<T> & opt, F && fallback) {
+auto unwrap_or_else(const std::optional<T> & opt, F && fallback) {
     if (opt.has_value()) {
         return opt.value();
     }
@@ -249,7 +249,7 @@ int main(int argc, const char ** argv_raw) {
         return make_random_temp_path() / (args.build_only ? "artifact.o" : "artifact.exe");
     };
 
-    fs::path output_path = fs::absolute(or_else(args.output_path, make_path));
+    fs::path output_path = fs::absolute(unwrap_or_else(args.output_path, make_path));
 
     fs::create_directories(output_path.parent_path());
 
