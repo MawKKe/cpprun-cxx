@@ -56,8 +56,8 @@ void extend(std::vector<T> & dst, const std::vector<T> & src) {
     dst.insert(dst.end(), src.begin(), src.end());
 }
 
-template <typename T>
-void append(std::vector<T> & dst, const T & value) {
+template <typename T, typename U>
+void append(std::vector<T> & dst, const U & value) {
     dst.push_back(value);
 }
 
@@ -209,9 +209,9 @@ auto collect_build_args(const CpprunArgs & args, const fs::path & output_file) {
     }
     extend(cmd, args.build_args);
     if (args.build_only) {
-        append(cmd, std::string("-c"));
+        append(cmd, "-c");
     }
-    append(cmd, std::string("-o"));
+    append(cmd, "-o");
     append(cmd, output_file.string());
     return cmd;
 }
