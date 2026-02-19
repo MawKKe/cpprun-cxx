@@ -11,6 +11,6 @@ test: out/cpprun hello.cpp
 ctest:
 	cmake -B out -S . -GNinja -DENABLE_TESTING=ON -DCMAKE_BUILD_TYPE=Debug
 	cmake --build out --verbose
-	ctest --test-dir out
+	ctest --test-dir out --output-on-failure --no-tests=error
 
 .PHONY: clean test ctest
