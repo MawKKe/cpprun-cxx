@@ -107,7 +107,7 @@ $ cpprun --cpprun-compiler-info
 # Testing
 
 ```bash
-$ cmake -B out -S . -G Ninja -DENABLE_TESTING=ON
+$ cmake -B out -S . -G Ninja -DBUILD_TESTING=ON
 
 $ cmake --build out
 

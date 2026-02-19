@@ -9,7 +9,7 @@ test: out/cpprun hello.cpp
 	env CPPRUN_VERBOSE=1 ./out/cpprun hello.cpp -O3 -std=c++17 -- foo bar baz
 
 ctest:
-	cmake -B out -S . -GNinja -DENABLE_TESTING=ON -DCMAKE_BUILD_TYPE=Debug
+	cmake -B out -S . -GNinja -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Debug
 	cmake --build out --verbose
 	ctest --test-dir out --output-on-failure --no-tests=error
 

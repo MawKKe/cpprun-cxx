@@ -27,7 +27,7 @@ target_enable_extra_compiler_warnings(cpprun)
 target_link_cxx_std_fs_if_needed(cpprun)
 
 
-if(ENABLE_TESTING)
+if(BUILD_TESTING)
     include(CTest)
     add_subdirectory(ext/googletest)
     include(GoogleTest)
