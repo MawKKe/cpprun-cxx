@@ -40,14 +40,16 @@ environment variables:
 
 namespace fs = std::filesystem;
 
-static const std::vector<std::string> DEFAULT_CXXFLAGS = {
+namespace cpprun {
+
+const std::vector<std::string> DEFAULT_CXXFLAGS = {
     "-Wall",
     "-Wextra",
     "-pedantic",
     "-g",
 };
 
-static const std::string DEFAULT_CXX_STANDARD = "-std=c++23";
+const std::string DEFAULT_CXX_STANDARD = "-std=c++23";
 
 template <typename T>
 void extend(std::vector<T> & dst, const std::vector<T> & src) {
@@ -234,7 +236,7 @@ auto unwrap_or_else(const std::optional<T> & opt, F && fallback) {
     return fallback();
 }
 
-int main(int argc, const char ** argv_raw) {
+int inner_main(int argc, const char ** argv_raw) {
     std::vector<std::string> argv(argv_raw + 1, argv_raw + argc);
     auto [cpprun_args, run_args] = split_args(argv);
 
@@ -287,4 +289,9 @@ int main(int argc, const char ** argv_raw) {
     cleanup();
 
     return rc;
+}
+}  // namespace cpprun
+
+int main(int argc, const char ** argv_raw) {
+    return cpprun::inner_main(argc, argv_raw);
 }
