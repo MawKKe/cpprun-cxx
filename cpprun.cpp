@@ -216,11 +216,10 @@ uint32_t random_value() {
     return rng() & 0xFFFFFFFF;
 }
 
-fs::path make_random_output_path(const CpprunArgs & args) {
+fs::path make_random_temp_path() {
     auto tmpdir = fs::temp_directory_path();
-    std::string suffix = args.build_only ? ".o" : ".exe";
     auto subdir = "cpprun-" + std::to_string(random_value()) + "-" + std::to_string(getpid());
-    return tmpdir / subdir / ("artifact" + suffix);
+    return tmpdir / subdir;
 }
 
 bool contains(const std::vector<std::string> & haystack, const std::string & needle) {
@@ -246,7 +245,9 @@ int main(int argc, const char ** argv_raw) {
         return 0;
     }
 
-    auto make_path = [&args]() -> fs::path { return make_random_output_path(args); };
+    auto make_path = [&args]() -> fs::path {
+        return make_random_temp_path() / (args.build_only ? "artifact.o" : "artifact.exe");
+    };
 
     fs::path output_path = fs::absolute(or_else(args.output_path, make_path));
 
