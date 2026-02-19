@@ -179,6 +179,10 @@ CpprunArgs parse_cpprun_args(const std::vector<std::string> & cpprun_args) {
     for (size_t i = 0; i < cpprun_args.size(); ++i) {
         const std::string & a = cpprun_args[i];
 
+        if (a == "--") {
+            throw std::runtime_error("cpprun arguments may not contain a '--'");
+        }
+
         if (a == "--cpprun-compiler-info") {
             args.show_compiler_info = true;
         } else if (a == "-c") {
