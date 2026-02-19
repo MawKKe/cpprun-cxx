@@ -2,27 +2,29 @@ cmake_minimum_required(VERSION 3.20)
 
 project(cpprun-cxx)
 
+function(target_enable_extra_compiler_warnings target)
+    if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+        target_compile_options(${target}
+            PRIVATE
+                -Wall -Wextra -Wpedantic
+        )
+    endif()
+endfunction()
+
+function(target_link_cxx_std_fs_if_needed target)
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
+        # Old GCC versions require manual linking with stdc++fs for std::filesystem support
+        target_link_libraries(${target}
+            PRIVATE
+                stdc++fs
+        )
+    endif()
+endfunction()
+
 add_executable(cpprun cpprun.cpp)
-
-target_compile_features(cpprun
-    PRIVATE
-        cxx_std_17
-)
-
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    target_compile_options(cpprun
-        PRIVATE
-            -Wall -Wextra -pedantic
-    )
-endif()
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS "9.0")
-    # Old GCC versions require manual linking with stdc++fs for std::filesystem support
-    target_link_libraries(cpprun
-        PRIVATE
-            stdc++fs
-    )
-endif()
+target_compile_features(cpprun PRIVATE cxx_std_17)
+target_enable_extra_compiler_warnings(cpprun)
+target_link_cxx_std_fs_if_needed(cpprun)
 
 
 if(ENABLE_TESTING)
