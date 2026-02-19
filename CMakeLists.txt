@@ -41,28 +41,28 @@ if(ENABLE_TESTING)
     target_link_libraries(test_cpprun PRIVATE gtest gtest_main)
     gtest_discover_tests(test_cpprun)
 
-    add_test(NAME cpprun_run_hello_world_with_args
+    add_test(NAME CppRun.CLI.RunHelloWorld
         COMMAND cpprun -std=c++17 ${CMAKE_CURRENT_SOURCE_DIR}/hello.cpp -- foo bar baz
     )
-    set_tests_properties(cpprun_run_hello_world_with_args
+    set_tests_properties(CppRun.CLI.RunHelloWorld
         PROPERTIES
             PASS_REGULAR_EXPRESSION
                 "Hello World!\nargv\\[1\\]: foo\nargv\\[2\\]: bar\nargv\\[3\\]: baz\n"
     )
 
-    add_test(NAME cpprun_show_version_native
+    add_test(NAME CppRun.CLI.ShowVersionNative
         COMMAND cpprun --version
     )
 
-    add_test(NAME cpprun_show_compiler_info
+    add_test(NAME CppRun.CLI.ShowCompilerInfo
         COMMAND cpprun --cpprun-compiler-info
     )
 
-    add_test(NAME cpprun_expect_failure_to_compile
+    add_test(NAME CppRun.CLI.ExpectFailureToCompile
         COMMAND cpprun -std=c++17 ${CMAKE_CURRENT_SOURCE_DIR}/notexist.cpp
     )
 
-    set_tests_properties(cpprun_expect_failure_to_compile
+    set_tests_properties(CppRun.CLI.ExpectFailureToCompile
         PROPERTIES
             WILL_FAIL TRUE
     )
