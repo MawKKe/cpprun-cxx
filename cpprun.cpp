@@ -216,16 +216,14 @@ auto collect_build_args(const CpprunArgs & args, const fs::path & output_file) {
     return cmd;
 }
 
-uint32_t random_value() {
-    static_assert(sizeof(uint32_t) <= sizeof(std::mt19937::result_type), "rng result type is too small");
-    std::mt19937 rng(std::random_device{}());
-    return rng() & 0xFFFFFFFF;
+template <typename RNG>
+uint32_t random_value(RNG & rng) {
+    std::uniform_int_distribution<uint32_t> dist;
+    return dist(rng);
 }
 
-fs::path make_random_temp_path() {
-    auto tmpdir = fs::temp_directory_path();
-    auto subdir = "cpprun-" + std::to_string(random_value()) + "-" + std::to_string(getpid());
-    return tmpdir / subdir;
+std::string format_run_dir(uint32_t indent_a, uint32_t indent_b) {
+    return "cpprun-" + std::to_string(indent_a) + "-" + std::to_string(indent_b);
 }
 
 bool contains(const std::vector<std::string> & haystack, const std::string & needle) {
@@ -251,8 +249,12 @@ int inner_main(int argc, const char ** argv_raw) {
         return 0;
     }
 
-    auto make_path = [&args]() -> fs::path {
-        return make_random_temp_path() / (args.build_only ? "artifact.o" : "artifact.exe");
+    std::mt19937 rng(std::random_device{}());
+
+    auto make_path = [&args, &rng]() -> fs::path {
+        auto tmpdir = fs::temp_directory_path();
+        auto rundir = format_run_dir(random_value(rng), getpid());
+        return tmpdir / rundir / (args.build_only ? "artifact.o" : "artifact.exe");
     };
 
     fs::path output_path = fs::absolute(unwrap_or_else(args.output_path, make_path));

@@ -3,12 +3,26 @@
 #include "cpprun.cpp"
 
 TEST(CppRun, RandomValue) {
-    uint32_t v1 = cpprun::random_value();
-    uint32_t v2 = cpprun::random_value();
-    EXPECT_NE(v1, v2);  // very unlikely to be equal
+    {
+        std::mt19937 rng{1234};
+        EXPECT_EQ(sizeof(cpprun::random_value(rng)), sizeof(uint32_t));
+    }
 
-    EXPECT_TRUE(v1 <= std::numeric_limits<uint32_t>::max());
-    EXPECT_TRUE(v2 <= std::numeric_limits<uint32_t>::max());
+    {
+        std::mt19937 rng1{1234};
+        std::mt19937 rng2{1234};
+        auto lhs = cpprun::random_value(rng1);
+        auto rhs = cpprun::random_value(rng2);
+        EXPECT_EQ(lhs, rhs);  // same seed should produce same value
+    }
+
+    {
+        std::mt19937 rng1{1234};
+        std::mt19937 rng2{4321};
+        auto lhs = cpprun::random_value(rng1);
+        auto rhs = cpprun::random_value(rng2);
+        EXPECT_NE(lhs, rhs);  // different seeds should produce different values
+    }
 }
 
 TEST(CppRun, UnwrapOrElse) {
@@ -78,12 +92,9 @@ bool starts_with(const std::string & str, const std::string & prefix) {
     return str.size() >= prefix.size() && str.substr(0, prefix.size()) == prefix;
 }
 
-TEST(CppRun, MakeRandomTempPath) {
-    auto path1 = cpprun::make_random_temp_path();
-    auto path2 = cpprun::make_random_temp_path();
-    EXPECT_NE(path1, path2);  // very unlikely to be equal
-    EXPECT_TRUE(starts_with(path1.filename().string(), "cpprun-"));
-    EXPECT_TRUE(starts_with(path2.filename().string(), "cpprun-"));
+TEST(CppRun, FormatRunDir) {
+    auto name = cpprun::format_run_dir(1234, 4321);
+    EXPECT_EQ(name, "cpprun-1234-4321");
 }
 
 TEST(CppRun, ParseCpprunArgs) {
