@@ -122,3 +122,16 @@ TEST(CppRun, RunCmd) {
     EXPECT_EQ(output, "hello world 1 2 3\n");
     EXPECT_EQ(error, "");
 }
+
+TEST(CppRun, RunCmdVerbose) {
+    testing::internal::CaptureStdout();
+    testing::internal::CaptureStderr();
+
+    auto exit_code = cpprun::run_cmd("echo", {"hello world 1 2 3"}, true);
+    auto output = testing::internal::GetCapturedStdout();
+    auto error = testing::internal::GetCapturedStderr();
+
+    EXPECT_EQ(exit_code, 0);
+    EXPECT_EQ(output, ">>> echo \"hello world 1 2 3\"\nhello world 1 2 3\n");
+    EXPECT_EQ(error, "");
+}
