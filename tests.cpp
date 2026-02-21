@@ -97,3 +97,17 @@ TEST(CppRun, ParseCpprunArgs) {
     EXPECT_FALSE(args.show_compiler_info);
     EXPECT_FALSE(args.verbose);
 }
+
+TEST(CppRun, RunCmd) {
+    testing::internal::CaptureStdout();
+    testing::internal::CaptureStderr();
+
+    auto exit_code = cpprun::run_cmd("echo", {"hello world 1 2 3"}, false);
+
+    auto output = testing::internal::GetCapturedStdout();
+    auto error = testing::internal::GetCapturedStderr();
+
+    EXPECT_EQ(exit_code, 0);
+    EXPECT_EQ(output, "hello world 1 2 3\n");
+    EXPECT_EQ(error, "");
+}
