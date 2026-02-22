@@ -80,6 +80,7 @@ TEST(CppRun, SplitArgs) {
         SplitArgsCase{{"arg1", "arg2", "--", "run1", "run2"}, {"arg1", "arg2"}, {"run1", "run2"}},
         SplitArgsCase{{"arg1", "arg2"}, {"arg1", "arg2"}, {}},
         SplitArgsCase{{"--", "run1", "run2"}, {}, {"run1", "run2"}},
+        SplitArgsCase{{"arg1", "--"}, {"arg1"}, {}},
     };
     for (const auto & c : cases) {
         auto [cpprun_args, run_args] = cpprun::split_args(c.input);

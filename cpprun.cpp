@@ -120,20 +120,15 @@ static int run_cmd(const std::string & prog, const std::vector<std::string> & ar
 auto split_args(const std::vector<std::string> & args, const std::string & sep = "--") {
     auto it = std::find(std::begin(args), std::end(args), sep);
 
-    if (it == std::end(args)) {
-        return std::pair{
-            args,
-            std::vector<std::string>{},
-        };
-    }
-
+    // Ideally we could return pair of std::span,
+    // but since we want to be C++17 compatible we return a pair of vector copies instead.
     return std::pair{
         std::vector<std::string>{
             std::begin(args),
             it,
         },
         std::vector<std::string>{
-            std::next(it),
+            it == std::end(args) ? std::end(args) : std::next(it),
             std::end(args),
         },
     };
