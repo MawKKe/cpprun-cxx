@@ -135,3 +135,17 @@ TEST(CppRun, RunCmdVerbose) {
     EXPECT_EQ(output, ">>> echo \"hello world 1 2 3\"\nhello world 1 2 3\n");
     EXPECT_EQ(error, "");
 }
+
+TEST(CppRun, ParseCxxFlags) {
+    using V = std::vector<std::string>;
+    {
+        std::vector<std::string> output;
+        cpprun::parse_cxxflags_into(output, "");
+        EXPECT_EQ(output, V{});
+    }
+    {
+        std::vector<std::string> output;
+        cpprun::parse_cxxflags_into(output, "-Wall -Wextra -O2");
+        EXPECT_EQ(output, V({"-Wall", "-Wextra", "-O2"}));
+    }
+}

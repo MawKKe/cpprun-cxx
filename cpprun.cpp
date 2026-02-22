@@ -149,15 +149,19 @@ struct CpprunArgs {
     std::vector<std::string> build_args;
 };
 
+void parse_cxxflags_into(std::vector<std::string> & output, const char * cxxflags_str) {
+    std::istringstream iss(cxxflags_str);
+    std::string flag;
+    while (iss >> flag) {
+        output.push_back(flag);
+    }
+}
+
 CpprunArgs parse_cpprun_args(const std::vector<std::string> & cpprun_args) {
     CpprunArgs args;
 
     if (const char * cxxflags = std::getenv("CPPRUN_CXXFLAGS")) {
-        std::istringstream iss(cxxflags);
-        std::string flag;
-        while (iss >> flag) {
-            args.build_args.push_back(flag);
-        }
+        parse_cxxflags_into(args.build_args, cxxflags);
     } else {
         extend(args.build_args, DEFAULT_CXXFLAGS);
     }
