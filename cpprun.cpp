@@ -237,34 +237,36 @@ auto unwrap_or_else(const std::optional<T> & opt, F && fallback) {
     return fallback();
 }
 
-const char * usage =
-    "Usage: cpprun [cpprun options] <source-file> [<source-file> ...] -- [target run options]\n\n"
-    "Builds given C++ sources into an executable, and runs it with the given arguments.\n\n"
-    "cpprun options:\n"
-    "  --cpprun-help:\n"
-    "      Show this help message and exit\n"
-    "  --cpprun-compiler-info:\n"
-    "      Show compiler version information and exit\n"
-    "  -c:\n"
-    "      Build only, do not run the program\n"
-    "  -o <file>:\n"
-    "      Specify output file (default is a temporary file in the system temp directory)\n"
-    "  -std=<version>:\n"
-    "      Specify the C++ standard to use (overrides CPPRUN_CXX_STANDARD environment variable)\n"
-    "\n"
-    "  (any other options are passed to the compiler as-is)\n\n"
-    ""
-    "Environment variables:\n"
-    "  CPPRUN_CXXFLAGS:\n"
-    "      Additional flags to pass to the compiler (default is \"-Wall -Wextra "
-    "-pedantic -g\")\n"
-    "  CPPRUN_CXX_STANDARD:\n"
-    "      Specify the C++ standard to use (default is \"-std=c++23\", set to empty string to "
-    "disable/use compiler default)\n"
-    "  CPPRUN_CXX:\n"
-    "      Specify the C++ compiler to use (default is \"c++\")\n"
-    "  CPPRUN_VERBOSE:\n"
-    "      If set to a non-empty value, print the commands being executed";
+const char * usage = &R"(
+Usage:
+    cpprun [cpprun options] <source-file> [<source-file> ...] -- [target run options]
+
+Builds given C++ sources into an executable, and runs it with the given arguments.
+
+cpprun options:
+    --cpprun-help:
+            Show this help message and exit
+    --cpprun-compiler-info:
+            Show compiler version information and exit
+    -c:
+            Build only, do not run the program
+    -o <file>:
+            Specify output file (default is a temporary file in the system temp directory)
+    -std=<version>:
+            Specify the C++ standard to use (overrides CPPRUN_CXX_STANDARD environment variable)
+
+    (any other options are passed to the compiler as-is)
+
+Environment variables:
+    CPPRUN_CXXFLAGS:
+            Additional flags to pass to the compiler (default is "-Wall -Wextra -pedantic -g")
+    CPPRUN_CXX_STANDARD:
+            Specify the C++ standard to use (default is "-std=c++23", set to empty string to disable/use compiler default)
+    CPPRUN_CXX:
+            Specify the C++ compiler to use (default is "c++")
+    CPPRUN_VERBOSE:
+            If set to a non-empty value, print the commands being executed
+)"[1];  // indexing trick to remove leading newline
 
 int inner_main(int argc, const char ** argv_raw) {
     std::vector<std::string> argv(argv_raw + 1, argv_raw + argc);
