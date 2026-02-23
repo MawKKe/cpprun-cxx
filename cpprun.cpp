@@ -237,9 +237,43 @@ auto unwrap_or_else(const std::optional<T> & opt, F && fallback) {
     return fallback();
 }
 
+const char * usage =
+    "Usage: cpprun [cpprun options] <source-file> [<source-file> ...] -- [target run options]\n\n"
+    "Builds given C++ sources into an executable, and runs it with the given arguments.\n\n"
+    "cpprun options:\n"
+    "  --cpprun-help:\n"
+    "      Show this help message and exit\n"
+    "  --cpprun-compiler-info:\n"
+    "      Show compiler version information and exit\n"
+    "  -c:\n"
+    "      Build only, do not run the program\n"
+    "  -o <file>:\n"
+    "      Specify output file (default is a temporary file in the system temp directory)\n"
+    "  -std=<version>:\n"
+    "      Specify the C++ standard to use (overrides CPPRUN_CXX_STANDARD environment variable)\n"
+    "\n"
+    "  (any other options are passed to the compiler as-is)\n\n"
+    ""
+    "Environment variables:\n"
+    "  CPPRUN_CXXFLAGS:\n"
+    "      Additional flags to pass to the compiler (default is \"-Wall -Wextra "
+    "-pedantic -g\")\n"
+    "  CPPRUN_CXX_STANDARD:\n"
+    "      Specify the C++ standard to use (default is \"-std=c++23\", set to empty string to "
+    "disable/use compiler default)\n"
+    "  CPPRUN_CXX:\n"
+    "      Specify the C++ compiler to use (default is \"c++\")\n"
+    "  CPPRUN_VERBOSE:\n"
+    "      If set to a non-empty value, print the commands being executed";
+
 int inner_main(int argc, const char ** argv_raw) {
     std::vector<std::string> argv(argv_raw + 1, argv_raw + argc);
     auto [cpprun_args, run_args] = split_args(argv);
+
+    if (contains(cpprun_args, "--cpprun-help")) {
+        std::cout << usage << std::endl;
+        return 0;
+    }
 
     CpprunArgs args = parse_cpprun_args(cpprun_args);
 
@@ -283,6 +317,12 @@ int inner_main(int argc, const char ** argv_raw) {
     }
 
     if (not fs::exists(output_path)) {
+        if (contains(cpprun_args, "--help")) {
+            std::cout << "-----------\n";
+            std::cout << "NOTE: option \"--help\" was passed to the compiler; to see help for "
+                      << fs::path(argv_raw[0]).filename() << " itself, use --cpprun-help" << std::endl;
+            std::cout << "-----------\n";
+        }
         std::cerr << "ERROR: expected output file at " << output_path << " was not created, unable to continue!"
                   << std::endl;
         cleanup();

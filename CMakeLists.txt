@@ -41,6 +41,10 @@ if(BUILD_TESTING)
     target_link_libraries(test_cpprun PRIVATE gtest gtest_main)
     gtest_discover_tests(test_cpprun)
 
+    add_test(NAME CppRun.CLI.ShowHelp
+        COMMAND cpprun --cpprun-help
+    )
+
     add_test(NAME CppRun.CLI.RunHelloWorld
         COMMAND cpprun -std=c++17 ${CMAKE_CURRENT_SOURCE_DIR}/hello.cpp -- foo bar baz
     )
