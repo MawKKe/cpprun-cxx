@@ -45,6 +45,12 @@ if(BUILD_TESTING)
         COMMAND cpprun --cpprun-help
     )
 
+    set_tests_properties(CppRun.CLI.ShowHelp
+        PROPERTIES
+            PASS_REGULAR_EXPRESSION
+                "Usage:\n    cpprun \\[cpprun options\\] <source-file> \\[<source-file> ...\\] -- \\[target run options\\]\n\n"
+    )
+
     add_test(NAME CppRun.CLI.RunHelloWorld
         COMMAND cpprun -std=c++17 ${CMAKE_CURRENT_SOURCE_DIR}/hello.cpp -- foo bar baz
     )
