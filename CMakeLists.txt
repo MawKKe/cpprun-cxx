@@ -30,7 +30,7 @@ install(TARGETS cpprun)
 
 if(BUILD_TESTING)
     include(CTest)
-    add_subdirectory(ext/googletest)
+    add_subdirectory(ext/googletest EXCLUDE_FROM_ALL)
     include(GoogleTest)
 
     add_executable(test_cpprun tests.cpp)
