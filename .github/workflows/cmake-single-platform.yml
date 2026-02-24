@@ -28,7 +28,7 @@ jobs:
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja -DBUILD_TESTING=ON
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja -DBUILD_TESTING=ON -DCMAKE_INSTALL_PREFIX=${{github.workspace}}/myinstall
 
     - name: Build
       # Build your program with the given configuration
@@ -40,3 +40,10 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure --no-tests=error
 
+    - name: Install
+      # Install your program to the default location (e.g. /usr/local on Linux). You can customize the install location by setting CMAKE_INSTALL_PREFIX in the configure step.
+      run: cmake --install ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Check final install
+      # Check that the installed program is working as expected. This step is optional but can be useful to verify that the install step is correct.
+      run: ${{github.workspace}}/myinstall/bin/cpprun --cpprun-help

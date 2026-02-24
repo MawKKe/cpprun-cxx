@@ -26,6 +26,7 @@ target_compile_features(cpprun PRIVATE cxx_std_17)
 target_enable_extra_compiler_warnings(cpprun)
 target_link_cxx_std_fs_if_needed(cpprun)
 
+install(TARGETS cpprun)
 
 if(BUILD_TESTING)
     include(CTest)
